@@ -1,0 +1,80 @@
+<!DOCTYPE HTML>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Spring Boot Thymeleaf - Bootstrap WebJars</title>
+
+  <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
+  <link th:rel="stylesheet" href="/css/login.css">
+</head>
+<body>
+
+<div class="container">
+  <div class="row justify-content-center h-100">
+    <div class="col-xs-12">
+      <div class="card w-80">
+        <div class="image-container">
+          <img class="card-img-top image" src="/images/me2.jpg" alt="Card image cap">
+        </div>
+        <div class="card-body">
+          <h5 class="card-title text-center">Register New User</h5>
+          <p class="card-text text-center">This project is for authenticating with Session</p>
+          <div class="form-container">
+            <form th:action="@{/auth/register}" method="post" th:object="${registerDTO}">
+              <div class="row gx-2">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label >Full name</label>
+                    <input th:field="*{fullName}" type="text" class="form-control"  placeholder="Enter your fullname">
+                    <p class="form-error"  th:if="${#fields.hasErrors('fullName')}" th:errors="*{fullName}"></p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label >Email</label>
+                    <input th:field="*{email}" type="text" class="form-control"  placeholder="Enter your email">
+                    <p class="form-error"  th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="row gx-2">
+                <div class="col-6">
+                  <div class="form-group">
+                    <label >Username</label>
+                    <input th:field="*{username}" type="text" class="form-control"   placeholder="Enter username">
+                    <small th:unless="${#fields.hasErrors('checked')}" id="emailHelp" class="form-text text-muted">We'll never share your info with anyone else.</small>
+                    <p class="form-error"  th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
+                  </div>
+                </div>
+                <div class="col-6">
+                  <div class="form-group">
+                    <label >Password</label>
+                    <input th:field="*{password}" type="password" class="form-control"  placeholder="Password">
+                    <p class="form-error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
+                  </div>
+                </div>
+              </div>
+              <div class="form-check">
+                <input th:field="*{checked}" type="checkbox" class="form-check-input">
+                <label class="form-check-label">Accept all terms & policies</label>
+                <p class="form-error"  th:if="${#fields.hasErrors('checked')}" th:errors="*{checked}"></p>
+              </div>
+              <div class="d-flex justify-content-center mt-3">
+                <button type="submit" class="btn btn-primary">Register</button>
+                <a href="/auth/login" class="btn btn-text">Or login</a>
+              </div>
+            </form>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
+<script th:src="@{/webjars/popper.js/1.12.9-1/umd/popper.min.js}"></script>
+<script th:src="@{/webjars/bootstrap/4.0.0-2/js/bootstrap.min.js}"></script>
+
+</body>
+</html>
