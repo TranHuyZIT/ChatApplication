@@ -20,6 +20,7 @@
                     <h5 class="card-title text-center">Home Page</h5>
                     <p th:unless="${username}" class="card-text text-center">This project is for authenticating with Session</p>
                     <p th:if="${username}" class="card-text text-center" th:text="'Welcome ' + ${username}"></p>
+                    <div sec:authorize="hasRole('USER')">Text visible to user.</div>
                     <div class="d-flex justify-content-center">
                         <a th:unless="${username}" href="/auth/login" class="btn btn-primary">Authenticate Here</a>
                         <form th:if="${username}" th:action="@{/auth/logout}" method="post">

@@ -11,17 +11,24 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
+import org.springframework.session.FindByIndexNameSessionRepository;
+import org.springframework.session.Session;
+import org.springframework.session.security.SpringSessionBackedSessionRegistry;
 
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-public class SecurityConfig {
+public class SecurityConfig<S extends Session> {
     @Autowired
     UserDetailsService userDetailsService;
+    @Autowired
+    private  SessionFilterChain sessionFilterChain;
 
     @Bean
     public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
@@ -38,10 +45,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
+                .sessionManagement(
+                        (sessionManagement) -> sessionManagement
+                            .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
+                            .maximumSessions(2)
+                        )
                 .authorizeHttpRequests((request) -> request.
                         requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/css/**", "images/**")
                             .permitAll()
-                );
+                        .requestMatchers("/user-route/**").hasAnyAuthority("USER", "ADMIN")
+                        .requestMatchers("/admin-route/**").hasAuthority("ADMIN")
+                        .requestMatchers("/**").permitAll()
+                )
+                .authenticationManager(authenticationManager(new AuthenticationConfiguration()))
+                .authenticationProvider(authenticationProvider())
+                .addFilterBefore(sessionFilterChain, UsernamePasswordAuthenticationFilter.class);
         return  httpSecurity.build();
     }
 }
