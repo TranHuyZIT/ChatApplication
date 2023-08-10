@@ -1,0 +1,16 @@
+.image{
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    object-fit:cover;
+}
+.image-container{
+    margin:auto;
+    display:flex;
+}
+.container{
+    height: 100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+}

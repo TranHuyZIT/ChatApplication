@@ -17,7 +17,7 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 @EnableMethodSecurity
 public class SecurityConfig {
     @Bean
-    AuthenticationProvider authenticationProvider (){
+    public AuthenticationProvider authenticationProvider (){
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
         authenticationProvider.setPasswordEncoder(new BCryptPasswordEncoder());
         authenticationProvider.setUserDetailsService(new UserDetailsService());
@@ -25,12 +25,11 @@ public class SecurityConfig {
     }
 
     @Bean
-    SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
+    public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
-                .authorizeHttpRequests((request) ->
-                            request.
-                                    requestMatchers(new AntPathRequestMatcher("/home/*", "/auth/*"))
-                                    .permitAll()
+                .authorizeHttpRequests((request) -> request.
+                        requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/css/**", "images/**")
+                            .permitAll()
                 );
         return  httpSecurity.build();
     }
