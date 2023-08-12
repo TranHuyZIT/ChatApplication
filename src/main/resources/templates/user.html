@@ -3,21 +3,24 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <link th:rel="stylesheet" th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "/>
 </head>
 <body>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center align-items-center w-100" style="height: 100vh;">
         <div class="col-6">
             <div class="card text-center">
                 <div class="card-header">
-                    Featured
+                    Congratulations!
                 </div>
                 <div class="card-body">
-                    <h5 class="card-title">Special title treatment</h5>
-                    <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-                    <a href="#" class="btn btn-primary">Go somewhere</a>
+                    <h5 class="card-title">User Route</h5>
+                    <p class="card-text">If you are accessing this route, you must be a user.</p>
+                    <form method="post" th:action="@{/auth/logout}">
+                        <button type="submit" href="#" class="btn btn-primary">Sign Out</button>
+                    </form>
                 </div>
                 <div class="card-footer text-muted">
-                    2 days ago
+                    Welcome!
                 </div>
             </div>
         </div>
