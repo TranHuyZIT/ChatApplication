@@ -15,9 +15,8 @@ public class UserDetails implements org.springframework.security.core.userdetail
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return userInfo.getRolesList().stream().map((roles -> {
-            return new SimpleGrantedAuthority(roles.getName());
-        })).collect(Collectors.toList());
+        return userInfo.getRolesList().stream().map((roles ->
+                new SimpleGrantedAuthority(roles.getName()))).collect(Collectors.toList());
     }
 
     @Override
