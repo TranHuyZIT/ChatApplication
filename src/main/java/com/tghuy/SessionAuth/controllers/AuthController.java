@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.security.Principal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -55,7 +56,7 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
             httpSession.setAttribute("session_user", loginDTO.getUsername());
-            return "redirect:/home";
+            return "redirect:/main";
         }
         catch (BadCredentialsException e){
             System.out.println(e);
@@ -69,7 +70,6 @@ public class AuthController {
             model.addAttribute("authenticationError", "Error occured, please try again later!");
             return "auth/login";
         }
-
     }
     @GetMapping("/auth/register")
     public String register(@ModelAttribute RegisterDTO registerDTO){

@@ -25,7 +25,7 @@ public class WebsocketConfiguration extends AbstractSessionWebSocketMessageBroke
 
     @Override
     protected void configureStompEndpoints(StompEndpointRegistry stompEndpointRegistry) {
-        stompEndpointRegistry.addEndpoint("/chat-websocket");
+        stompEndpointRegistry.addEndpoint("/chat-websocket").withSockJS();
     }
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry){

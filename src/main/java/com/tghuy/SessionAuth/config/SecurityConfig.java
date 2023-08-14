@@ -11,6 +11,7 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -51,12 +52,13 @@ public class SecurityConfig<S extends Session> {
                             .maximumSessions(2)
                         )
                 .authorizeHttpRequests((request) -> request.
-                        requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/css/**", "images/**")
+                        requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/css/**", "images/**", "/error/**")
                             .permitAll()
                         .requestMatchers("/user-route/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/admin-route/**").hasAuthority("ADMIN")
-                        .requestMatchers("/**").permitAll()
+                        .requestMatchers("/**").authenticated()
                 )
+                .exceptionHandling(httpSecurityExceptionHandlingConfigurer -> httpSecurityExceptionHandlingConfigurer.accessDeniedPage("/error"))
                 .authenticationManager(authenticationManager(new AuthenticationConfiguration()))
                 .authenticationProvider(authenticationProvider())
                 .addFilterBefore(sessionFilterChain, UsernamePasswordAuthenticationFilter.class);
