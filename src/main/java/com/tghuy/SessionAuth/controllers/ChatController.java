@@ -2,6 +2,7 @@ package com.tghuy.SessionAuth.controllers;
 
 import com.tghuy.SessionAuth.models.ChatMessage;
 import com.tghuy.SessionAuth.models.User;
+import com.tghuy.SessionAuth.models.events.LoginEvent;
 import com.tghuy.SessionAuth.repositories.UserOnlineRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
@@ -28,18 +29,22 @@ public class ChatController {
     private SimpMessagingTemplate messagingTemplate;
     @Autowired
     private UserOnlineRepository userOnlineRepository;
-
+    /*
+        SubscribeMapping method will be called when a user subscribe to this path.
+     */
     @SubscribeMapping("/chat.users-online")
-    public List<User> returnNumberOfUsersOnline(){
+    public List<LoginEvent> returnNumberOfUsersOnline(){
         return userOnlineRepository.getUserOnline();
     }
-
+    /*
+        MessageMapping will be call when client send message to this path
+    */
     @MessageMapping("/chat.message")
     public ChatMessage filterMessage(@Payload ChatMessage chatMessage, Principal principal){
         chatMessage.setFromUsername(principal.getName());
         return chatMessage;
     }
-    @MessageMapping("/chat.message.private.${username}")
+    @MessageMapping("/chat.private.${username}")
     public ChatMessage filterPrivateMessage(@Payload ChatMessage chatMessage,
                                             @DestinationVariable("username") String username, Principal principal){
         chatMessage.setFromUsername(principal.getName());

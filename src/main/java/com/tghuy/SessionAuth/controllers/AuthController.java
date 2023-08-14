@@ -5,7 +5,9 @@ import com.tghuy.SessionAuth.models.DTO.LoginDTO;
 import com.tghuy.SessionAuth.models.DTO.RegisterDTO;
 import com.tghuy.SessionAuth.models.Roles;
 import com.tghuy.SessionAuth.models.User;
+import com.tghuy.SessionAuth.models.events.LoginEvent;
 import com.tghuy.SessionAuth.repositories.RoleRepository;
+import com.tghuy.SessionAuth.repositories.UserOnlineRepository;
 import com.tghuy.SessionAuth.repositories.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpSession;
@@ -25,10 +27,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
 
 @Controller
 public class AuthController {
@@ -38,6 +37,8 @@ public class AuthController {
     UserRepository userRepository;
     @Autowired
     RoleRepository roleRepository;
+    @Autowired
+    UserOnlineRepository userOnlineRepository;
     @GetMapping("/auth/login")
     public String loginPage (@ModelAttribute LoginDTO loginDTO, HttpSession session){
         Object userSession = session.getAttribute("session_user");
@@ -56,6 +57,8 @@ public class AuthController {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
             httpSession.setAttribute("session_user", loginDTO.getUsername());
+            Optional<User> user = userRepository.findByUsername(loginDTO.getUsername());
+            userOnlineRepository.addUserOnline(new LoginEvent(user.orElse(null), new Date()));
             return "redirect:/main";
         }
         catch (BadCredentialsException e){
