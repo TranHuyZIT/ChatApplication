@@ -6,6 +6,7 @@ import com.tghuy.SessionAuth.models.DTO.RegisterDTO;
 import com.tghuy.SessionAuth.models.Roles;
 import com.tghuy.SessionAuth.models.User;
 import com.tghuy.SessionAuth.models.events.LoginEvent;
+import com.tghuy.SessionAuth.models.events.LogoutEvent;
 import com.tghuy.SessionAuth.repositories.RoleRepository;
 import com.tghuy.SessionAuth.repositories.UserOnlineRepository;
 import com.tghuy.SessionAuth.repositories.UserRepository;
@@ -14,6 +15,7 @@ import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpRequest;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -27,6 +29,8 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import java.security.Principal;
+import java.time.DateTimeException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Controller
@@ -39,6 +43,8 @@ public class AuthController {
     RoleRepository roleRepository;
     @Autowired
     UserOnlineRepository userOnlineRepository;
+    @Autowired
+    SimpMessagingTemplate messagingTemplate;
     @GetMapping("/auth/login")
     public String loginPage (@ModelAttribute LoginDTO loginDTO, HttpSession session){
         Object userSession = session.getAttribute("session_user");
@@ -58,7 +64,9 @@ public class AuthController {
                     new UsernamePasswordAuthenticationToken(loginDTO.getUsername(), loginDTO.getPassword()));
             httpSession.setAttribute("session_user", loginDTO.getUsername());
             Optional<User> user = userRepository.findByUsername(loginDTO.getUsername());
-            userOnlineRepository.addUserOnline(new LoginEvent(user.orElse(null), new Date()));
+            LoginEvent loginEvent = new LoginEvent(user.orElse(null), new Date());
+            userOnlineRepository.addUserOnline(loginEvent);
+            messagingTemplate.convertAndSend("/topic/chat.login", loginEvent);
             return "redirect:/main";
         }
         catch (BadCredentialsException e){
@@ -105,10 +113,12 @@ public class AuthController {
         return "redirect:/auth/login";
     }
     @PostMapping("/auth/logout")
-    public String logout (HttpServletRequest request){
+    public String logout (HttpServletRequest request, Principal principal){
         HttpSession session = request.getSession();
-        System.out.println(session);
         session.invalidate();
+        messagingTemplate.convertAndSend("/topic/chat.logout",
+                new LogoutEvent(principal.getName(), new Date()));
+        userOnlineRepository.removeUserOnline(principal.getName());
         return "redirect:/home";
     }
 }

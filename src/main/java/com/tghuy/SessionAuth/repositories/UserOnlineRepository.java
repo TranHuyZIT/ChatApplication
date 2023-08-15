@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+
 @Component
 @Data
 public class UserOnlineRepository {
@@ -16,8 +18,8 @@ public class UserOnlineRepository {
         userOnline.add(user);
         return this.userOnline;
     }
-    public List<LoginEvent> removeUserOnline(LoginEvent user){
-        userOnline.remove(user);
+    public List<LoginEvent> removeUserOnline(String username){
+        userOnline.removeIf(userOnline -> Objects.equals(userOnline.getUser().getUsername(), username));
         return this.userOnline;
     }
 }

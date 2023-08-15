@@ -35,9 +35,6 @@
               Public/Private Chat, List Users Online, Prevent Profanity
             </a>
           </li>
-          <li class="nav-item">
-            <a th:text="${onlineUsers}" class="nav-link"> </a>
-          </li>
           <li class="nav-item dropdown">
             <a
               class="nav-link dropdown-toggle"
@@ -64,9 +61,41 @@
               >
             </div>
           </li>
+          <form th:action="@{/auth/logout}" method="post">
+            <li class="nav-item">
+              <button type="submit" class="btn">Logout</button>
+            </li>
+          </form>
         </ul>
       </div>
     </nav>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col col-12 col-md-4">
+          <h1 class="text-center">Online Users</h1>
+        </div>
+        <div class="col col-12 col-md-10">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>Fullname</th>
+                <th>Joined At</th>
+                <th>Action</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-repeat="user in onlineUsers">
+                <td>{{user.user.username}}</td>
+                <td>{{user.user.fullName}}</td>
+                <td>{{user.time| date: 'dd/MM-hh:mm'}}</td>
+                <td></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
   </body>
 </html>
 <script th:src="@{/webjars/jquery/3.0.0/jquery.min.js}"></script>
@@ -77,5 +106,5 @@
 <script th:src="@{/webjars/angularjs/1.8.2/angular-animate.min.js}"></script>
 
 <script src="/js/main.js"></script>
- <script src="/js/services/SocketClient.service.js"></script>
+<script src="/js/services/SocketClient.service.js"></script>
 <script src="/js/controllers/MainController.js"></script>

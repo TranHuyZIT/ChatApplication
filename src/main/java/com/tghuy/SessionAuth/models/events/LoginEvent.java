@@ -6,6 +6,7 @@ import jakarta.persistence.TemporalType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
@@ -13,5 +14,5 @@ import java.util.Date;
 public class LoginEvent {
     User user;
     @Temporal(TemporalType.TIMESTAMP)
-    Date createdAt;
+    Date time;
 }
