@@ -45,11 +45,12 @@ public class ChatController {
         chatMessage.setFromUsername(principal.getName());
         return chatMessage;
     }
-    @MessageMapping("/chat.private.${username}")
+    @MessageMapping("/chat.private.{username}")
     public ChatMessage filterPrivateMessage(@Payload ChatMessage chatMessage,
                                             @DestinationVariable("username") String username, Principal principal){
         chatMessage.setFromUsername(principal.getName());
         String destination = "/user/" + username + "/exchange/amq.direct/chat.message";
+        System.out.println(chatMessage);
         messagingTemplate.convertAndSend(destination, chatMessage);
         return chatMessage;
     }

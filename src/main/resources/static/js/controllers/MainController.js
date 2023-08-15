@@ -60,6 +60,14 @@ app.controller("MainController", function ($scope, SocketClientService) {
       console.log(response);
       $scope.messages.push(JSON.parse(response.body));
     });
+    SocketClientService.subscribe(
+      "/user/exchange/amq.direct/chat.message",
+      (response) => {
+        console.log(response);
+        $scope.messages = [];
+        $scope.messages.push(JSON.parse(response.body));
+      }
+    );
   }
   function handleFailureSocketConnection(err) {
     alert(err.message);

@@ -28,5 +28,6 @@ public class User implements Serializable {
     @Column(nullable = false, length = 30)
     private String email;
     @OneToMany(fetch = FetchType.EAGER)
+
     private List<Roles> rolesList;
 }
