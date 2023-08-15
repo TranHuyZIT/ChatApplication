@@ -8,7 +8,7 @@
       th:rel="stylesheet"
       th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "
     />
-    <link rel="stylesheet" href="css/main.css" />
+    <link rel="stylesheet" href="/css/main.css" />
     <script th:src="@{/webjars/sockjs-client/1.5.1/sockjs.min.js}"></script>
     <script th:src="@{/webjars/stomp-websocket/2.3.4/stomp.min.js}"></script>
     <script th:inline="javascript">
@@ -103,7 +103,7 @@
               <tr>
                 <th>Username</th>
                 <th>
-                  <button class="btn btn-primary" ng-click="publicChat()">
+                  <button class="btn btn-secondary" ng-click="publicChat()">
                     Public chat
                   </button>
                 </th>
@@ -115,7 +115,7 @@
                 <td>
                   <button
                     ng-show="chatWith !== user.user.username"
-                    class="btn btn-primary"
+                    class="btn btn-secondary"
                   >
                     Chat
                   </button>
@@ -136,27 +136,30 @@
           </table>
           <div class="chat-box">
             <ul>
-              <li class="row">
+              <li ng-repeat="message in messages" class="row">
                 <div class="col col-10">
-                  <strong>tghuy:</strong> <span>Hey, how's it going</span>
+                  <strong>{{message.fromUsername}}:</strong>
+                  <span>{{message.message}}</span>
                 </div>
                 <div class="col col-2">
                   <p>
-                    <em> 10:30 </em>
+                    <em> {{message.timeSent | date: 'hh:mm'}} </em>
                   </p>
                 </div>
               </li>
             </ul>
           </div>
-          <form action="">
-            <div class="form-group">
-              <input
-                type="text"
-                class="form-control"
-                placeholder="Start chatting someone..."
-              />
-            </div>
-          </form>
+          <div class="form-group d-flex">
+            <input
+              ng-model="chatInput"
+              type="text"
+              class="form-control"
+              placeholder="Start chatting someone..."
+            />
+            <button class="btn btn-secondary" ng-click="sendMessage()">
+              Send
+            </button>
+          </div>
         </div>
       </div>
     </div>

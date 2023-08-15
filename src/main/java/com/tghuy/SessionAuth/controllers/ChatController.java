@@ -41,6 +41,7 @@ public class ChatController {
     */
     @MessageMapping("/chat.message")
     public ChatMessage filterMessage(@Payload ChatMessage chatMessage, Principal principal){
+        System.out.println(chatMessage);
         chatMessage.setFromUsername(principal.getName());
         return chatMessage;
     }

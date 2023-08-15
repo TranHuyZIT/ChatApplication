@@ -52,7 +52,7 @@ public class SecurityConfig<S extends Session> {
                             .maximumSessions(2)
                         )
                 .authorizeHttpRequests((request) -> request.
-                        requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/css/**", "images/**", "/error/**")
+                        requestMatchers("/", "/home", "/webjars/**", "/auth/**", "/swagger-ui/**", "/css/**", "images/**", "/error/**")
                             .permitAll()
                         .requestMatchers("/user-route/**").hasAnyAuthority("USER", "ADMIN")
                         .requestMatchers("/admin-route/**").hasAuthority("ADMIN")

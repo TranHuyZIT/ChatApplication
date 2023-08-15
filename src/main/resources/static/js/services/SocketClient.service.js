@@ -1,5 +1,5 @@
 "use strict";
-app.factory("SocketClientService", function () {
+app.factory("SocketClientService", function ($rootScope) {
   const stompClient = Stomp.over(new SockJS("/chat-websocket"));
   return {
     connect() {
@@ -16,16 +16,12 @@ app.factory("SocketClientService", function () {
       );
       return connectionPromise;
     },
-    subscribe(destination) {
-      return new Promise((resolve, reject) =>
-        stompClient.subscribe(
-          destination,
-          (message) => {
-            resolve(message);
-          },
-          (error) => reject(error)
-        )
-      );
+    subscribe(destination, callback) {
+      stompClient.subscribe(destination, function (message) {
+        $rootScope.$apply(function () {
+          callback(message);
+        });
+      });
     },
     sendMessage(destination, headers, message) {
       stompClient.send(destination, headers, message);
