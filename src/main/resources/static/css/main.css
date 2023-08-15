@@ -1,0 +1,5 @@
+.chat-box {
+  height: 400px;
+  padding: 24px;
+  border: dashed 1px #ccc;
+}

@@ -8,6 +8,7 @@
       th:rel="stylesheet"
       th:href="@{/webjars/bootstrap/4.0.0-2/css/bootstrap.min.css} "
     />
+    <link rel="stylesheet" href="css/main.css" />
     <script th:src="@{/webjars/sockjs-client/1.5.1/sockjs.min.js}"></script>
     <script th:src="@{/webjars/stomp-websocket/2.3.4/stomp.min.js}"></script>
     <script th:inline="javascript">
@@ -93,6 +94,69 @@
               </tr>
             </tbody>
           </table>
+        </div>
+      </div>
+      <div class="row mt-5">
+        <div class="col col-12 col-md-4">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th>Username</th>
+                <th>
+                  <button class="btn btn-primary" ng-click="publicChat()">
+                    Public chat
+                  </button>
+                </th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr ng-click="privateChat(user)" ng-repeat="user in onlineUsers">
+                <td>{{user.user.username}}</td>
+                <td>
+                  <button
+                    ng-show="chatWith !== user.user.username"
+                    class="btn btn-primary"
+                  >
+                    Chat
+                  </button>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="col col-12 col-md-8">
+          <table class="table table-dark">
+            <thead>
+              <tr>
+                <td class="text-center">
+                  Chatting with {{chatWith || 'everyone'}}
+                </td>
+              </tr>
+            </thead>
+          </table>
+          <div class="chat-box">
+            <ul>
+              <li class="row">
+                <div class="col col-10">
+                  <strong>tghuy:</strong> <span>Hey, how's it going</span>
+                </div>
+                <div class="col col-2">
+                  <p>
+                    <em> 10:30 </em>
+                  </p>
+                </div>
+              </li>
+            </ul>
+          </div>
+          <form action="">
+            <div class="form-group">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Start chatting someone..."
+              />
+            </div>
+          </form>
         </div>
       </div>
     </div>
