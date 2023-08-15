@@ -38,6 +38,26 @@ app.controller("MainController", function ($scope, SocketClientService) {
     );
     $scope.chatInput = "";
   };
+  $scope.startTyping = function () {
+    const username = currentUser.username;
+    console.log(username);
+    SocketClientService.sendMessage(
+      "/topic/chat.typing",
+      null,
+      JSON.stringify({ username, time: new Date() })
+    );
+    setTimeout(() => {
+      $scope.stopTyping();
+    }, 500);
+  };
+  $scope.stopTyping = function () {
+    const username = currentUser.user.username;
+    SocketClientService.sendMessage(
+      "/topic/chat.typing",
+      null,
+      JSON.stringify({ username, time: new Date() })
+    );
+  };
   function connectedToSocket() {
     SocketClientService.subscribe("/app/chat.users-online", (message) => {
       $scope.onlineUsers = JSON.parse(message.body);
@@ -53,6 +73,16 @@ app.controller("MainController", function ($scope, SocketClientService) {
       for (let index in $scope.onlineUsers) {
         if ($scope.onlineUsers[index].username == username) {
           $scope.onlineUsers.splice(index, 1);
+        }
+      }
+    });
+    SocketClientService.subscribe("/topic/chat.typing", (response) => {
+      console.log(response);
+      const username = JSON.parse(response.body).username;
+      for (const user of $scope.onlineUsers) {
+        if (user.user.username === username) {
+          user["isTyping"] = !user?.isTyping;
+          console.log(user);
         }
       }
     });

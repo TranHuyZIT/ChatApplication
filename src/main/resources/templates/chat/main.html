@@ -90,7 +90,11 @@
                 <td>{{user.user.username}}</td>
                 <td>{{user.user.fullName}}</td>
                 <td>{{user.time| date: 'dd/MM-hh:mm'}}</td>
-                <td></td>
+                <td>
+                  <p ng-show="user.isTyping">
+                    <em>{{user.user.username}} is typing...</em>
+                  </p>
+                </td>
               </tr>
             </tbody>
           </table>
@@ -152,6 +156,7 @@
           <div class="form-group d-flex">
             <input
               ng-model="chatInput"
+              ng-keyup="$event.keyCode == 13 ? sendMessage() : startTyping()"
               type="text"
               class="form-control"
               placeholder="Start chatting someone..."
