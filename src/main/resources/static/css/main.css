@@ -1,5 +1,19 @@
 .chat-box {
   height: 400px;
-  padding: 24px;
   border: dashed 1px #ccc;
+  position: relative;
+}
+.messages-container {
+  padding: 24px;
+}
+li {
+  list-style-type: none;
+}
+.typing-event-container {
+  position: absolute;
+  bottom: 0;
+}
+.typing-event-container > ul {
+  padding: 6px;
+  margin: 0;
 }

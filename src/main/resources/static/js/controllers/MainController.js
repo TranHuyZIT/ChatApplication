@@ -4,6 +4,8 @@ app.controller("MainController", function ($scope, SocketClientService) {
   $scope.chatWith = null;
   $scope.messages = [];
   $scope.chatInput = "";
+  $scope.typings = [];
+  $scope.isTyping = false;
   (function init() {
     SocketClientService.connect()
       .then(connectedToSocket)
@@ -39,6 +41,8 @@ app.controller("MainController", function ($scope, SocketClientService) {
     $scope.chatInput = "";
   };
   $scope.startTyping = function () {
+    if ($scope.isTyping) return;
+    $scope.isTyping = true;
     const username = currentUser.username;
     console.log(username);
     SocketClientService.sendMessage(
@@ -51,7 +55,8 @@ app.controller("MainController", function ($scope, SocketClientService) {
     }, 500);
   };
   $scope.stopTyping = function () {
-    const username = currentUser.user.username;
+    $scope.isTyping = false;
+    const username = currentUser.username;
     SocketClientService.sendMessage(
       "/topic/chat.typing",
       null,
@@ -77,12 +82,23 @@ app.controller("MainController", function ($scope, SocketClientService) {
       }
     });
     SocketClientService.subscribe("/topic/chat.typing", (response) => {
-      console.log(response);
       const username = JSON.parse(response.body).username;
       for (const user of $scope.onlineUsers) {
-        if (user.user.username === username) {
+        if (
+          user.user.username === username &&
+          user.user.username != currentUser.username
+        ) {
           user["isTyping"] = !user?.isTyping;
-          console.log(user);
+          const userTyping = $scope.typings.find(
+            (ele) => ele.username === user.user.username
+          );
+          if (userTyping) {
+            $scope.typings = $scope.typings.filter(
+              (ele) => ele.username !== userTyping.username
+            );
+          } else {
+            $scope.typings.push(user.user);
+          }
         }
       }
     });

@@ -139,7 +139,7 @@
             </thead>
           </table>
           <div class="chat-box">
-            <ul>
+            <ul class="messages-container">
               <li ng-repeat="message in messages" class="row">
                 <div class="col col-10">
                   <strong>{{message.fromUsername}}:</strong>
@@ -152,7 +152,17 @@
                 </div>
               </li>
             </ul>
+            <div class="typing-event-container">
+              <ul>
+                <li ng-repeat="typing in typings">
+                  <p>
+                    <em>typing...</em>
+                  </p>
+                </li>
+              </ul>
+            </div>
           </div>
+
           <div class="form-group d-flex">
             <input
               ng-model="chatInput"
