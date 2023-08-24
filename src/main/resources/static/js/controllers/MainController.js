@@ -52,7 +52,7 @@ app.controller("MainController", function ($scope, SocketClientService) {
     );
     setTimeout(() => {
       $scope.stopTyping();
-    }, 500);
+    }, 800);
   };
   $scope.stopTyping = function () {
     $scope.isTyping = false;
