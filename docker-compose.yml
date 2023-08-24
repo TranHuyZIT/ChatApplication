@@ -9,22 +9,34 @@ services:
       MYSQL_ROOT_PASSWORD: 123456789
       MYSQL_DATABASE: session-auth
       MYSQL_PASSWORD: 123456789
+
+  phpmyadmin:
+    image: phpmyadmin
+    restart: always
+    ports:
+      - 8081:80
+    depends_on:
+      - main-mysql
+    networks:
+      - main_network
+    environment:
+      PMA_HOST: main-mysql
+
   main-service:
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://main-mysql:3306/session-auth?createDatabaseIfNotExist=true
       SPRING_DATASOURCE_USERNAME: root
       SPRING_DATASOURCE_PASSWORD: 123456789
-      SERVER_PORT: 443
       SPRING_SESSION_STORE: jdbc
       SPRING_SESSION_TIMEOUT: 900
-      SPRING_JPA_HIBERNATE_DDL-AUTO: update
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
     networks:
       - main_network
     build: ./
     depends_on:
       - main-mysql
     ports:
-      - 443:443
+      - 8080:8080
 networks:
   main_network:
     driver: bridge
